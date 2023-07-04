@@ -100,10 +100,11 @@ const getBookByIdHandler = (request, h) => {
 const editBookByIdHandler = (request, h) => {
 	const { id } = request.params;
 
-	const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
+	const { name, year, author, summary, publisher, pageCount, readPage, reading, insertedAt } = request.payload;
+	const finished = (pageCount === readPage) ? true: false;
 	const updatedAt = new Date().toISOString();
 
-	const index = notes.findIndex((note) => note.id === id);
+	const index = books.findIndex((book) => book.id === id);
 
 	if (!name) {
 		const response = h.response({
@@ -124,10 +125,10 @@ const editBookByIdHandler = (request, h) => {
 	}
 
 	if (index !== -1) {
-		name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, insertedAt, updatedAt,
+		name, year, author, summary, publisher, pageCount, readPage, finished, reading, id,  insertedAt, updatedAt,
 
-    notes[index] = {
-			...notes[index],
+    books[index] = {
+			...books[index],
 			name,
 			year,
 			author,
@@ -135,6 +136,7 @@ const editBookByIdHandler = (request, h) => {
 			publisher, 
 			pageCount,
 			readPage, 
+			finished,
 			reading,
 			updatedAt,
 		};
@@ -149,7 +151,7 @@ const editBookByIdHandler = (request, h) => {
 
 	const response = h.response({
 		status: 'fail',
-		message: 'Gagal, memperbarui. Id tidak ditemukan',
+		message: 'Gagal memperbarui buku. Id tidak ditemukan',
 	});
 	response.code(404);
 	return response;
@@ -159,10 +161,10 @@ const editBookByIdHandler = (request, h) => {
 const deleteBookByIdHandler = (request, h) => {
 	const { id } = request.params;
 
-	const index = notes.findIndex((note) => note.id === id);
+	const index = books.findIndex((book) => book.id === id);
 
 	if (index !== -1) {
-		notes.splice(index, 1);
+		books.splice(index, 1);
 		const response = h.response({
 			status: 'success',
 			message: 'Buku berhasil dihapus',
