@@ -24,11 +24,11 @@ const addBookHandler = (request, h) => {
 
 	const id = nanoid(16);
 	const finished = (pageCount === readPage) ? true: false;
-	const createdAt = new Date().toISOString();
-	const updatedAt = createdAt;
+	const insertedAt = new Date().toISOString();
+	const updatedAt = insertedAt;
 	
 	const newBook = {
-		name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, createdAt, updatedAt,
+		name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, insertedAt, updatedAt,
 	};
 	
 	books.push(newBook);
@@ -56,30 +56,48 @@ const addBookHandler = (request, h) => {
 	return response;
 };
 
-const getAllBooksHandler = () => {
-  if (books.length === 0) {
-    return h.response({
-      status: 'success',
-      data: {
-        books: [],
-      },
-    }).code(200);
-  }
+// const getAllBooksHandler = () => {	
+//   if (books.length === 0) {
+//     const response = h.response({
+//       status: 'success',
+//       data: {
+//         books,
+//       },
+//     });
+// 		return response;
+//   }
 
-  const formattedBooks = books.map((book) => ({
-    id: book.id,
-    name: book.name,
-    publisher: book.publisher,
-  }));
+//   const formattedBooks = books.map((book) => ({
+//     id: book.id,
+//     name: book.name,
+//     publisher: book.publisher,
+//   }));
 
-  const response = {
-    status: 'success',
-    data: {
-      books: formattedBooks,
-    },
-  };
+//   const response = {
+//     status: 'success',
+//     data: {
+//       books: formattedBooks,
+//     },
+//   };
 
-  return h.response(response).code(200);
+//   return h.response(response).code(200);
+// };
+
+const getAllBooksHandler = (request, h) => {
+
+	const formattedBooks = books.map((book) => ({
+		id: book.id,
+		name: book.name,
+		publisher: book.publisher,
+	}));
+
+	const response = h.response({
+		status: 'success',
+		data: {
+			books : formattedBooks
+		},
+	});
+	return response;
 };
 
 const getBookByIdHandler = (request, h) => {
@@ -133,7 +151,7 @@ const editBookByIdHandler = (request, h) => {
 	}
 
 	if (index !== -1) {
-		name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, createdAt, updatedAt,
+		name, year, author, summary, publisher, pageCount, readPage, reading, id, finished, insertedAt, updatedAt,
 
     notes[index] = {
 			...notes[index],
